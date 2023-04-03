@@ -61,11 +61,12 @@ def create_user(db: Session, user: schemas.UserCreate):
 #     return 
 
 def update_user(id_user: int, db: Session, user: schemas.UserUpdate):
+    user.id = id_user
     db.query(models.User).filter(
     models.User.id == id_user
-    ).update(models.User)
+    ).update(user.dict())
     db.commit()
-    return {'msg': 'passou da query'}
+    return user
 
 def delete_user(db: Session, user_id: int):
     try:
@@ -74,3 +75,11 @@ def delete_user(db: Session, user_id: int):
         return {"msg": "user delected sucessful"}
     except:
         return None
+    
+
+def patch_user(db: Session, id_user: int, user: schemas.UserPatch):
+    db.query(models.User).filter(
+    models.User.id == id_user
+    ).update(user.dict())
+    db.commit()
+    return user

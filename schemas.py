@@ -15,8 +15,14 @@ class UserCreate(BaseModel):
     login: str
     senha: str
 
-class UserUpdate(UserBase):
-    pass
+class UserUpdate(BaseModel):
+    id: Optional[int]
+    name: str
+    login: str
+    senha: str
+
+class UserPatch(BaseModel):
+    name: Optional[str]
 
 class User(BaseModel):
     id: Optional[int]
