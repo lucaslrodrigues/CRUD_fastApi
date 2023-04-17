@@ -1,11 +1,31 @@
 from typing import List
-from fastapi import Depends, FastAPI, HTTPException, APIRouter
+from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 import crud
-import models
 from schemas import User, UserCreate, UserUpdate, UserPatch
-from database import SessionLocal, engine
+from database import SessionLocal
 from app.service.pessoa_service import PessoaService
+
+'''
+View
+
+Tem como único trabalho receber os dados vindos da url e retornar uma response
+
+As atividades de regra de negocios ocorrem no service.
+O responsavel pelo CRUD é o repository, que se comunica com o BD.
+O router atua como um controlador central, redirecionando as entradas para alguma função (o mapa da aplicação)
+
+A aplicação segue o caminho:
+
+    view > service > repository
+
+Quando repository realiza a chamada para a query do crud a aplicação segue o caminho contrario:
+
+    repository > service > repository
+
+    com view retornando uma response no final.
+
+'''
 
 router = APIRouter()
 
@@ -16,54 +36,37 @@ def get_db():
     finally:
         db.close()
 
+# Este router diferente do @get modifica a url, trazendo um préfixo "/prefixo/users"
 @router.get("/users", response_model=List[User])
+# As funções de um metodo HTTP são iniciadas com argumentos definidos pelo metodo HTTP,
+# sessões do banco e argumentos vindos da request
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    users = crud.get_users(db, skip=skip, limit=limit)
-    return users
+    # Aqui é criada uma instancia da classe PessoaService que recebe a sessão do banco de dados localhost
+    # e parametros da query (no caso o inicio e limite de linhas que retornaram no array de dicionario (sera lido como json)) 
+    response = PessoaService().get_users(db=db, skip=skip, limit=limit)
+    return response
 
 @router.get("/users/{user_id}", response_model=User)
 def read_user(user_id: int, db: Session = Depends(get_db)):
-    db_user = crud.get_user(db, user_id=user_id)
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return db_user
-
-@router.post("/users", response_model=User)
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    response = PessoaService().save_service(db, user)
+    response = PessoaService().get_user(db=db, user_id=user_id)
     return response
 
-
+@router.post("/users", response_model=User)
+def save_user(user: UserCreate, db: Session = Depends(get_db)):
+    response = PessoaService().save_user(db, user)
+    return response
 
 @router.put("/users/update/{id_user}", response_model=User)
-def update_user(id_user: int, user: UserUpdate, db: Session = Depends(get_db)):
-    # id_exists = crud.get_user_id_exists(db=db, id_user=id_user)
-    db_user = crud.update_user(id_user=id_user, db=db, user=user)
-
-    if db_user is None:
-        raise HTTPException(status_code=400, detail="Algo deu errado")
-    raise HTTPException(status_code=200, detail="successfully update user")
-
+def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_db)):
+    response = PessoaService().update_user(db=db, user_id=user_id, user=user)
+    return response
 
 @router.delete("/users/delete/{user_id}", response_model=User)
 def delete_user(user_id: int, db: Session = Depends(get_db)):
-    
-    id_exists = crud.get_user_id_exists(db, user_id)
-
-    if id_exists is None:
-        raise HTTPException(status_code=404, detail="id don't exist")
-    
-    db_delete = crud.delete_user(db, user_id=user_id)
-    
-    if db_delete is None:
-        raise HTTPException(status_code=404, detail="id doesn't exist")
-    raise HTTPException(status_code=200, detail="successfully deleted user")
+    response = PessoaService().delete_user(db=db, user_id=user_id)
+    return response
 
 @router.patch("/users/patch/{id_user}", response_model = User)
-def patch_user(id_user: int, user: UserPatch, db: Session = Depends(get_db)):
-
-    db_user = crud.patch_user(db, id_user = id_user, user = user)
-
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="not found")
-    raise HTTPException(status_code=200, detail="successfully update user")
+def patch_user(user_id: int, user: UserPatch, db: Session = Depends(get_db)):
+    response = PessoaService.patch_user(db=db, user_id=user_id, user=user)
+    return response
