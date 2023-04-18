@@ -56,17 +56,17 @@ def save_user(user: UserCreate, db: Session = Depends(get_db)):
     response = PessoaService().save_user(db, user)
     return response
 
-@router.put("/users/update/{id_user}", response_model=User)
+@router.put("/update/{user_id}", response_model=User)
 def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_db)):
     response = PessoaService().update_user(db=db, user_id=user_id, user=user)
     return response
 
-@router.delete("/users/delete/{user_id}", response_model=User)
+@router.delete("/delete/{user_id}", response_model=User)
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     response = PessoaService().delete_user(db=db, user_id=user_id)
     return response
 
-@router.patch("/users/patch/{id_user}", response_model = User)
+@router.patch("/patch/{user_id}", response_model = User)
 def patch_user(user_id: int, user: UserPatch, db: Session = Depends(get_db)):
-    response = PessoaService.patch_user(db=db, user_id=user_id, user=user)
+    response = PessoaService().patch_user(db=db, user_id=user_id, user=user)
     return response

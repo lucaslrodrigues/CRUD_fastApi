@@ -8,22 +8,6 @@ class UserBase(BaseModel):
     login: str
     senha: str
 
-
-class UserCreate(BaseModel):
-    id: Optional[int]
-    name: str
-    login: str
-    senha: str
-
-class UserUpdate(BaseModel):
-    id: Optional[int]
-    name: str
-    login: str
-    senha: str
-
-class UserPatch(BaseModel):
-    name: Optional[str]
-
 class User(BaseModel):
     id: Optional[int]
     name: Optional[str]
@@ -32,3 +16,12 @@ class User(BaseModel):
     
     class Config:
         orm_mode = True
+
+class UserCreate(UserBase):
+    pass
+
+class UserUpdate(UserBase):
+    pass
+
+class UserPatch(User):
+    pass

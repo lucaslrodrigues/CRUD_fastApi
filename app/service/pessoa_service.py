@@ -42,7 +42,7 @@ class PessoaService:
         return response
     
     def update_user(self, db, user_id, user):
-        response = self.pessoa_repository.get_user(db, user_id, user)
+        response = self.pessoa_repository.get_user(db, user_id)
         response = {"404": "user not found"}  if response is None else self.pessoa_repository.update_user(db=db, user_id=user_id, user=user)
         return response
     
@@ -53,5 +53,5 @@ class PessoaService:
 
     def patch_user(self, db, user_id, user):
         response = self.pessoa_repository.get_user(db=db, user_id=user_id)
-        response = {"response": "user not found"} if response is None else self.pessoa_repository.patch_user(db, user_id, user)
+        response = {"response": "user not found"} if response is None else self.pessoa_repository.patch_user(db=db, user_id=user_id, user=user)
         return response

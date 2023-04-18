@@ -21,25 +21,31 @@ class PessoaCrud:
         db.refresh(db_user)
         return db_user
 
-    def update_user(self, id_user: int, db: Session, user: schemas.UserUpdate):
-        user.id = id_user
+    def update_user(self, db: Session, user_id: int ,user: schemas.UserUpdate):
+        user.id = user_id
         db.query(models.User).filter(
-        models.User.id == id_user
+        models.User.id == user_id
         ).update(user.dict())
         db.commit()
         return user
 
     def delete_user(self, db: Session, user_id: int):
         try:
-            db.query(models.User).filter(models.User.id == user_id).delete()
+            db_user = db.query(models.User).filter(models.User.id == user_id).first()
+            db.delete(db_user)
             db.commit()
-            return {"msg": "user delected sucessful"}
+            db.refresh(db_user)
+            return {"response": "user delected sucessful"}
         except:
-            return None
+            return {"response": "something wrong in query"}
         
-    def patch_user(self, db: Session, id_user: int, user: schemas.UserPatch):
-        db.query(models.User).filter(
-        models.User.id == id_user
-        ).update(user.dict())
+    def patch_user(self, db: Session, user_id: int, user: schemas.UserPatch):
+        db_user = db.query(models.User).filter(models.User.id == user_id).first()
+
+        for coluna, dado in user.dict(exclude_unset=True).items():
+            print(dict(user))
+            setattr(db_user, coluna, dado)
+        
         db.commit()
+        db.refresh(db_user)
         return user
