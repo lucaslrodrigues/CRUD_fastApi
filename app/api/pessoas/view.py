@@ -1,7 +1,6 @@
 from typing import List
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
-import crud
 from schemas import User, UserCreate, UserUpdate, UserPatch
 from database import SessionLocal
 from app.service.pessoa_service import PessoaService

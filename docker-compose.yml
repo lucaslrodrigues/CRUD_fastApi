@@ -3,18 +3,13 @@ version: "3.8"
 services:
   api:
     container_name: "composer-teste"
-    build:
-      context: .
+    build: .
     ports:
-      - "8001:8001"
+      - "8000:8000"
     hostname: "localhost"
-    volumes:
-      - .:/app
-    tty: true
-    networks:
-      - app
     depends_on:
       - db
+    tty: true
 
   db:
     image: postgres:14-alpine
@@ -27,32 +22,4 @@ services:
       - POSTGRES_HOST=localhost
     ports:
       - "5433:5432"
-    networks:
-      - app
     tty: true
-
-networks:
-  app:
-    driver: bridge
-
-
-# version: "3.8"
-
-# services:
-#   app:
-#     build: .
-#     ports:
-#       - "8000:80"
-#     environment:
-#       - POSTGRES_PASSWORD=postgres
-#       - POSTGRES_USER=postgres
-#       - POSTGRES_DB=postgres
-#     depends_on:
-#       - db
-
-#   db:
-#     image: postgres:12
-#     environment:
-#       - POSTGRES_PASSWORD=postgres
-#       - POSTGRES_USER=postgres
-#       - POSTGRES_DB=postgres

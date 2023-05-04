@@ -12,5 +12,5 @@ COPY . /app
 
 CMD ["make","run-server"]
 
-EXPOSE 8001
-EXPOSE 5433
+# EXPOSE 8001
+# EXPOSE 5433
