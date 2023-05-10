@@ -9,6 +9,9 @@ readme = "README.md"
 python = "^3.8"
 fastapi = "^0.95.0"
 boto3 = "1.17.112"
+uvicorn = "^0.22.0"
+fastapi-sqlalchemy = "^0.2.1"
+psycopg2-binary = "^2.9.6"
 
 
 [build-system]

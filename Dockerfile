@@ -11,6 +11,7 @@ COPY . /app
 # CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]
 
 CMD ["make","run-server"]
+# CMD ["bash","run.sh"]
 
 # EXPOSE 8001
 # EXPOSE 5433
