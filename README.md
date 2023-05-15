@@ -1,6 +1,6 @@
-# CRUD_postgres
-CRUD para o banco de dados postgres aplicando padrão de APIs RESTfull em uma simples api de cadastro de usuários
-
+# CRUD
+CRUD para o banco de dados postgres aplicando padrão de APIs RESTfull em uma simples api de cadastro de usuários.
+> Este é um projeto de aprendizado.
 ### libs
 Para instalar o ambiente virtual.
 ```
